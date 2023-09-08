@@ -24,44 +24,40 @@
     float samptime = 0.9158; 
 
 /* Screen */
-  int error_thrown = false;
-  String error_type = "";
+    int error_thrown = false;
+    String error_type = "";
 
 /* SD Card */
-  SDClass theSD;
-  File myFile;
-  #define FILENAME_LENGTH 23  
-  String RECORD_FILE_NAME;
-  int fileNumber;
-  String file_time = "00:00";
-  bool data_transfer_mode = false;
+    SDClass theSD;
+    File myFile;
+    #define FILENAME_LENGTH 23  
+    String RECORD_FILE_NAME;
+    int fileNumber;
+    String file_time = "00:00";
+    bool data_transfer_mode = false;
 
 /* Temp Sensor */
-  Adafruit_BME280 bme;
-  int temp = 0;
-  int humid = 0;
-  int pressure = 0;
+    Adafruit_BME280 bme;
+    int temp = 0;
+    int humid = 0;
+    int pressure = 0;
 
 /* Audio */
-      AudioClass *theAudio;
-      bool ErrEnd = false;
-      bool recording_in_progress;
+    AudioClass *theAudio;
+    bool ErrEnd = false;
+    bool recording_in_progress;
 
-      // Get default value from text file
-      static const uint32_t mic_gain = 160;  // 0 - 210 (+21dB)
-
-
-      static const uint32_t recoding_sampling_rate = 48000;  
-      static const uint8_t recoding_channel_number = 4;
-      static const uint8_t recoding_bit_length = 16;  
-      static const uint32_t recoding_time = 3600;     // 1800 seconds is 30min
-      static const int32_t recoding_byte_per_second = recoding_sampling_rate * recoding_channel_number * recoding_bit_length / 8;
-      static const uint64_t recoding_size = recoding_byte_per_second * recoding_time;
-      static const uint32_t buff_size = 500 * 1024;  // default = 160k
-      int recording_second_1 = 0;
-      int recording_second_2 = 0;
-      int recording_minute_1 = 0;
-      int recording_minute_2 = 0;
+    static const uint32_t recoding_sampling_rate = 48000;  
+    static const uint8_t recoding_channel_number = 4;
+    static const uint8_t recoding_bit_length = 16;  
+    static const uint32_t recoding_time = 3600;     // 1800 seconds is 30min
+    static const int32_t recoding_byte_per_second = recoding_sampling_rate * recoding_channel_number * recoding_bit_length / 8;
+    static const uint64_t recoding_size = recoding_byte_per_second * recoding_time;
+    static const uint32_t buff_size = 500 * 1024;  // default = 160k
+    int recording_second_1 = 0;
+    int recording_second_2 = 0;
+    int recording_minute_1 = 0;
+    int recording_minute_2 = 0;
 
 
 //----------------------------------------------------------------------------
@@ -151,13 +147,42 @@ void setup() {
       Serial.println("Press Button to Start Recording");
       unsigned long sb_current_millis = millis(); 
       int sbst = samptime * 1000;
+
+      // Get default value from text file
+      // static const uint32_t mic_gain = 160;  // 0 - 210 (+21dB)
+      uint32_t mic_gain = readGain();
+      
       while (digitalRead(ButtonPin)) {
+          int gain = mic_gain / 10;
           temp = temp_sensor(bme);
           humid = humid_sensor(bme);
           pressure = press_sensor(bme);
-          drawScreen_Standby(temp, humid, pressure); 
+          drawScreen_Standby(temp, humid, pressure, gain); 
 
-          // If gain button pressed
+          if (!digitalRead(ButtonPin)) {
+            unsigned long gain_millis = millis();
+            while (!digitalRead(ButtonPin)) {
+                unsigned long current_millis = millis(); 
+                if (current_millis - gain_millis > 5) {
+                  mic_gain += 20;
+                  
+                } // if
+
+
+            } // while
+            // thing that happens when pressed: start timer
+
+
+            // thing that happens when released
+            if (mic_gain > 210) {
+                    mic_gain = 0;
+                  }
+                  else {
+                    mic_gain += 20;
+                  }
+          } // if button
+
+          
 
             // If gain button == 1 for 5s, set current gain value as default
               // by writing it to file
@@ -166,7 +191,7 @@ void setup() {
             // else gain button released, cycle through gain values
 
           
-          }
+          } // while stand by
 
     /* Audio */
       // Initialize
@@ -422,6 +447,29 @@ void logData(int temperature, int humidity, int pressure) {
     // If log file cannot be opened, print error message to Serial monitor
     Serial.println("Error: Could not create or open log file");
   }
+}
+
+uint32_t readGain() {
+  File logFile = theSD.open("BIN/gain.txt", FILE_READ);
+  int gainValue = 0;
+
+  if (logFile) {
+    String gainString = "";
+    // Read the gain value from the file
+    while (logFile.available()) {
+        char c = logFile.read();
+        gainString += c;
+          }
+    gainValue = gainString.toInt();  // convert string to integer
+    logFile.close();
+  } 
+  
+  else {
+      Serial.println("Error opening gain.txt");
+  }
+
+  return gainValue;
+
 }
 
 

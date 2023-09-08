@@ -1,4 +1,4 @@
-// Code for Sensors of Plant Module
+// Code for Sensors of Acoustic Module
 
 #include <Arduino.h>
 #include <Adafruit_BME280.h>  // temp/humid sensor

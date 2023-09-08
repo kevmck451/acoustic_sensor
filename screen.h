@@ -14,16 +14,16 @@
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define LOGO_HEIGHT   16
 #define LOGO_WIDTH    16
-#define VERSION "V3.2"
+#define VERSION "V4.0"
 
 
 // -------------------- FUNCTIONS -----------------------
   // 10 characters size 2
-  // 21 characters size 1
+  // 20 characters size 1
   // 8 lines size 1
 
 /* Stand By Screen */
-void drawScreen_Standby(int airtemp, int humid, int pressure) {
+void drawScreen_Standby(int airtemp, int humid, int pressure, int gain) {
   display.clearDisplay();
   display.setTextSize(1);             
   display.setTextColor(SSD1306_WHITE);        
@@ -41,7 +41,10 @@ void drawScreen_Standby(int airtemp, int humid, int pressure) {
   display.print("P:");
   display.println(pressure);
 
-  display.println("Standing By");
+  display.print("Standing By");
+  display.print("   G:");
+  display.print(gain);
+  display.println("dB");
 
   display.println("--------------------");
 
