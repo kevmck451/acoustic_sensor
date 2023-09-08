@@ -15,7 +15,7 @@
 
 
 /* Global Variables */
-    String PROGRAM_NAME = "Acoustic Main V3.2 - 5/18/23-Kevin McKenzie";
+    String PROGRAM_NAME = "Acoustic Main V4.0 - 9/8/23-Kevin McKenzie";
     bool first_time = true;
     static const int ButtonPin = 8;
     static const int GainPin = 7;
@@ -47,7 +47,10 @@
       bool ErrEnd = false;
       bool recording_in_progress;
 
+      // Get default value from text file
       static const uint32_t mic_gain = 160;  // 0 - 210 (+21dB)
+
+
       static const uint32_t recoding_sampling_rate = 48000;  
       static const uint8_t recoding_channel_number = 4;
       static const uint8_t recoding_bit_length = 16;  
@@ -153,6 +156,16 @@ void setup() {
           humid = humid_sensor(bme);
           pressure = press_sensor(bme);
           drawScreen_Standby(temp, humid, pressure); 
+
+          // If gain button pressed
+
+            // If gain button == 1 for 5s, set current gain value as default
+              // by writing it to file
+              // screen updates with message default has been set
+          
+            // else gain button released, cycle through gain values
+
+          
           }
 
     /* Audio */
