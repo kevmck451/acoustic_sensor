@@ -9,6 +9,7 @@ Version 4: 9/8/23
 	- If gain button is pressed during recording, current record time is displayed
 	- Temp / Humid / Pressure pre / post recording is averaged to get 1 value for each
 	- Switch could be for sync mode where it flashes 4 times before starting record so that you can sync an external timer to it
+	- Try to increase bit depth to 24 bit with 48kHz SR
 
 Version 3_2:
 	- Same as V3.1 but with mods to avoid noise during recordings
