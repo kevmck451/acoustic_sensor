@@ -8,6 +8,7 @@ Version 4: 9/8/23
 	- Save current gain setting as default (overwrite setting in file)
 	- If gain button is pressed during recording, current record time is displayed
 	- Temp / Humid / Pressure pre / post recording is averaged to get 1 value for each
+	- Switch could be for sync mode where it flashes 4 times before starting record so that you can sync an external timer to it
 
 Version 3_2:
 	- Same as V3.1 but with mods to avoid noise during recordings

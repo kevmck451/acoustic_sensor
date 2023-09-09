@@ -64,25 +64,25 @@
 //-------------- SETUUUUUUP --------------------------------------------------
 //----------------------------------------------------------------------------
 void setup() {
-    Serial.begin(115200);
-    Serial.println(PROGRAM_NAME);
+    /* Setup */
+      Serial.begin(115200);
+      Serial.println(PROGRAM_NAME);
 
-    pinMode(LED0, OUTPUT);
-    pinMode(LED1, OUTPUT);
-    pinMode(LED2, OUTPUT);
-    pinMode(LED3, OUTPUT);
-    pinMode(ButtonPin, INPUT_PULLUP); // Recording & Data Transfer Mode Button
-    pinMode(GainPin, INPUT_PULLUP); // Gain Level & Auxiliary Function Button
-    pinMode(resetPin, OUTPUT); // To Reset Board
-
+      pinMode(LED0, OUTPUT);
+      pinMode(LED1, OUTPUT);
+      pinMode(LED2, OUTPUT);
+      pinMode(LED3, OUTPUT);
+      pinMode(ButtonPin, INPUT_PULLUP); // Recording & Data Transfer Mode Button
+      pinMode(GainPin, INPUT_PULLUP); // Gain Level & Auxiliary Function Button
+      pinMode(resetPin, OUTPUT); // To Reset Board
 
     /* Data Transfer Mode */
       if (!digitalRead(ButtonPin)) {
         delay(1000);
         if (!digitalRead(ButtonPin)) {
             data_transfer_mode = true;        
+          }
         }
-      }
 
     /* Screen */
       if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
@@ -126,17 +126,19 @@ void setup() {
             first_time = false;
             }
           error_thrown = true;
+          delay(500);
           drawScreen_TempError();
           while (digitalRead(ButtonPin)) {
+            // drawScreen_TempError();
             insertSDLEDS();
             }
-          }
+        } // if
       if (error_thrown) {
         Serial.println("Continuing without Temp Sensor");
         first_time = true;
         error_thrown = false;
         delay(1000);
-      }
+        } // if
 
       temp = temp_sensor(bme);
       humid = humid_sensor(bme);
@@ -147,10 +149,8 @@ void setup() {
       Serial.println("Press Button to Start Recording");
       unsigned long sb_current_millis = millis(); 
       int sbst = samptime * 1000;
-
-      // Get default value from text file
-      // static const uint32_t mic_gain = 160;  // 0 - 210 (+21dB)
       uint32_t mic_gain = readGain();
+      unsigned long gain_millis;
       
       while (digitalRead(ButtonPin)) {
           int gain = mic_gain / 10;
@@ -159,39 +159,25 @@ void setup() {
           pressure = press_sensor(bme);
           drawScreen_Standby(temp, humid, pressure, gain); 
 
-          if (!digitalRead(ButtonPin)) {
-            unsigned long gain_millis = millis();
-            while (!digitalRead(ButtonPin)) {
-                unsigned long current_millis = millis(); 
-                if (current_millis - gain_millis > 5) {
-                  mic_gain += 20;
-                  
+          if (!digitalRead(GainPin)) {
+            gain_millis = millis();
+
+            while (!digitalRead(GainPin)) {
+              unsigned long current_millis = millis();
+
+              if (current_millis - gain_millis > 5000) {
+                setGainDefault(gain);
+                drawScreen_GainDefault(gain);
+                Serial.println("New Default Set!");
+                delay(2000);
+                break;
                 } // if
+              } // while
 
-
-            } // while
-            // thing that happens when pressed: start timer
-
-
-            // thing that happens when released
-            if (mic_gain > 210) {
-                    mic_gain = 0;
-                  }
-                  else {
-                    mic_gain += 20;
-                  }
+            if (mic_gain > 210) { mic_gain = 0;}
+            else {mic_gain += 20;} 
           } // if button
-
-          
-
-            // If gain button == 1 for 5s, set current gain value as default
-              // by writing it to file
-              // screen updates with message default has been set
-          
-            // else gain button released, cycle through gain values
-
-          
-          } // while stand by
+        } // while stand by
 
     /* Audio */
       // Initialize
@@ -251,12 +237,15 @@ void setup() {
 //-------------- LOOOOOOOOP --------------------------------------------------
 //----------------------------------------------------------------------------
 void loop() {
- 
-    int recording_button = digitalRead(ButtonPin);
-    unsigned long current_millis = millis(); 
-    int st = samptime * 1000;
-    err_t err;
+    /* Setup */
+      int recording_button = digitalRead(ButtonPin);
+      unsigned long current_millis = millis(); 
+      int st = samptime * 1000;
+      err_t err;
 
+      bool gain_button_pressed = false;
+      if (digitalRead(GainPin) == 0) {gain_button_pressed = true;}
+    
     /* Read frames to record in file */
       err = theAudio->readFrames(myFile);
 
@@ -285,17 +274,20 @@ void loop() {
           std::string time_str = ss.str();
           file_time = ss.str().c_str();
           
-          // display.display();
-          // display.clearDisplay();   // Clear the buffer
-          // drawScreen_Recording(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+          if (gain_button_pressed) {
+            display.display();
+            display.clearDisplay();   // Clear the buffer
+            drawScreen_Recording(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+            gain_button_pressed = false;
+            } // if
           sample_millis = millis();
-          }
+          } // big if
 
     /* Data Log Sampling */
       // if ((current_millis - sample_millis) > st/2) {
       //     logData(temp_sensor(bme), humid_sensor(bme), press_sensor(bme));
       //   }      
-
+         // if
     /* Stop Recording */
       if (recording_in_progress && !recording_button) {
           Serial.println("BUTTON PRESSED");
@@ -472,7 +464,17 @@ uint32_t readGain() {
 
 }
 
+void setGainDefault(int gain) {
+  
+  // remove current gain.txt file
+  theSD.remove("BIN/gain.txt");
 
+  File logFile = theSD.open("BIN/gain.txt", FILE_WRITE);
+
+  logFile.println(gain);
+  logFile.close();
+  
+}
 
 
 

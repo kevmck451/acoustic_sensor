@@ -207,6 +207,23 @@ void drawScreen_DT() {
   display.display();
 }
 
+/* Default Gain Set Screen */
+void drawScreen_GainDefault(int gain) {
+  display.clearDisplay();
+  display.setTextSize(2);             
+  display.setTextColor(SSD1306_WHITE);        
+  display.setCursor(0,0);    
+
+  display.println("Gain Set!");
+
+  display.setTextSize(1);
+  display.println();
+
+  display.print("Default Gain: ");
+  display.println(gain);
+  
+  display.display();
+}
 
 void drawBM(const uint8_t* bitmap) {
   
