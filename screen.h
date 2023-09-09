@@ -1,10 +1,9 @@
-// Code for OLED of Plant Module
+// Code for OLED of Acoustic Module
 
 #include <Arduino.h> 
 #include <Wire.h>   //i2c
 #include <Adafruit_GFX.h>     //oled 
 #include <Adafruit_SSD1306.h> //oled
-
 
 // -------------------- GLOBAL VARS  -----------------------
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -15,7 +14,6 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define LOGO_HEIGHT   16
 #define LOGO_WIDTH    16
 #define VERSION "V4.0"
-
 
 // -------------------- FUNCTIONS -----------------------
   // 10 characters size 2
