@@ -15,6 +15,7 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define LOGO_WIDTH    16
 #define VERSION "V4.0"
 
+
 // -------------------- FUNCTIONS -----------------------
   // 10 characters size 2
   // 20 characters size 1
@@ -217,8 +218,12 @@ void drawScreen_GainDefault(int gain) {
   display.setTextSize(1);
   display.println();
 
-  display.print("Default Gain: ");
-  display.println(gain);
+  display.println("   Default Gain");
+
+  display.println("   is now set to:");
+  display.print("    ");
+  display.print(gain);
+  display.println("dB");
   
   display.display();
 }
