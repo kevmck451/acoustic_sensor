@@ -363,6 +363,9 @@ void loop() {
           lightsOFF();
           recording_in_progress = false;
           logData(temp_sensor(bme), humid_sensor(bme), press_sensor(bme));
+          delay(100);
+          average_weather_data();
+
 
           /* Wait for Reset */
           if (!error_thrown) {
@@ -501,7 +504,63 @@ void setGainDefault(int gain) {
   
 }
 
+void average_weather_data() {
+  String record_filename = String(fileNumber) + ".csv";
+  File logFile = theSD.open(record_filename, FILE_READ);
 
+  if (logFile) {
+    long totalTemperature = 0;
+    long totalHumidity = 0;
+    long totalPressure = 0;
+    int rowCount = 0;
+
+    // Skip header line
+    String header = logFile.readStringUntil('\n');
+    
+    while (logFile.available()) {
+      // Read a line from the CSV file
+      String line = logFile.readStringUntil('\n');
+      
+      // Split the line to get temperature, humidity, and pressure values
+      int firstCommaIndex = line.indexOf(",");
+      int secondCommaIndex = line.lastIndexOf(",");
+      
+      int temp = line.substring(0, firstCommaIndex).toInt();
+      int hum = line.substring(firstCommaIndex + 1, secondCommaIndex).toInt();
+      int pres = line.substring(secondCommaIndex + 1).toInt();
+
+      totalTemperature += temp;
+      totalHumidity += hum;
+      totalPressure += pres;
+
+      rowCount++;
+    }
+    logFile.close();
+
+    // Calculate the averages and round them
+    int avgTemperature = (totalTemperature + rowCount / 2) / rowCount; // Rounding
+    int avgHumidity = (totalHumidity + rowCount / 2) / rowCount;       // Rounding
+    int avgPressure = (totalPressure + rowCount / 2) / rowCount;       // Rounding
+
+    // Overwrite the original CSV file with averaged data
+    logFile = theSD.open(record_filename, FILE_WRITE);
+
+    if (logFile) {
+      logFile.println("Temperature,Humidity,Pressure");
+      logFile.print(avgTemperature);
+      logFile.print(",");
+      logFile.print(avgHumidity);
+      logFile.print(",");
+      logFile.println(avgPressure);
+      logFile.close();
+    } else {
+      Serial.println("Error: Could not open log file for writing");
+    }
+
+  } else {
+    Serial.println("Error: Could not open log file for reading");
+  }
+}
 
 
 
