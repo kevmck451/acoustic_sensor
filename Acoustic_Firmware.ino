@@ -50,7 +50,7 @@
 
     static const uint32_t recoding_sampling_rate = 48000;  
     static const uint8_t recoding_channel_number = 4;
-    static const uint8_t recoding_bit_length = 16;  
+    static const uint8_t recoding_bit_length = 24;  
     static const uint32_t recoding_time = 3600;     // 1800 seconds is 30min
     static const int32_t recoding_byte_per_second = recoding_sampling_rate * recoding_channel_number * recoding_bit_length / 8;
     static const uint64_t recoding_size = recoding_byte_per_second * recoding_time;
