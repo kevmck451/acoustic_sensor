@@ -15,7 +15,7 @@
 
 
 /* Global Variables */
-    String PROGRAM_NAME = "Acoustic Main V4.0 - 9/8/23-Kevin McKenzie";
+    String PROGRAM_NAME = "Acoustic Main V4.0 - 9/11/23-Kevin McKenzie";
     bool first_time = true;
     static const int ButtonPin = 8;
     static const int GainPin = 7;
@@ -34,6 +34,7 @@
     String RECORD_FILE_NAME;
     int fileNumber;
     String file_time = "00:00";
+    String old_file_time = "00:00";
     bool data_transfer_mode = false;
 
 /* Temp Sensor */
@@ -54,6 +55,8 @@
     static const int32_t recoding_byte_per_second = recoding_sampling_rate * recoding_channel_number * recoding_bit_length / 8;
     static const uint64_t recoding_size = recoding_byte_per_second * recoding_time;
     static const uint32_t buff_size = 500 * 1024;  // default = 160k
+    bool gain_button_pressed = false;
+    bool gain_button_released = false;
     int recording_second_1 = 0;
     int recording_second_2 = 0;
     int recording_minute_1 = 0;
@@ -238,6 +241,7 @@ void setup() {
       theAudio->writeWavHeader(myFile);
       theAudio->startRecorder();
       drawScreen_Recording(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+      
 
 } // setup
 
@@ -247,19 +251,16 @@ void setup() {
 void loop() {
     /* Setup */
       int recording_button = digitalRead(ButtonPin);
+      int gain_button = digitalRead(GainPin);
       unsigned long current_millis = millis(); 
       int st = samptime * 1000;
       err_t err;
-
-      bool gain_button_pressed = false;
-      if (digitalRead(GainPin) == 0) {gain_button_pressed = true;}
     
     /* Read frames to record in file */
       err = theAudio->readFrames(myFile);
 
     /* Screen Timer */
       if ((current_millis - sample_millis) > st) {
-
           recording_second_1++;
           if (recording_second_1 > 9) {
             recording_second_1 = 0;
@@ -281,21 +282,36 @@ void loop() {
           ss << recording_minute_2 << recording_minute_1 << ":" << recording_second_2 << recording_second_1;
           std::string time_str = ss.str();
           file_time = ss.str().c_str();
-          
-          if (gain_button_pressed) {
-            display.display();
-            display.clearDisplay();   // Clear the buffer
-            drawScreen_Recording(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
-            gain_button_pressed = false;
-            } // if
+          // drawScreen_Recording_Time(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+        
           sample_millis = millis();
-          } // big if
+          } // if
 
     /* Data Log Sampling */
       // if ((current_millis - sample_millis) > st/2) {
       //     logData(temp_sensor(bme), humid_sensor(bme), press_sensor(bme));
       //   }      
          // if
+
+    /* Update Record Time */
+      if (gain_button == 0) {gain_button_pressed = true;}
+      if (gain_button_pressed && gain_button == 1) {gain_button_released = true;}
+      if (gain_button_pressed) {
+        if (old_file_time != file_time.c_str()) {
+          drawScreen_Recording_Time(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+          // logData(temp_sensor(bme), humid_sensor(bme), press_sensor(bme));
+          Serial.println("Time Updated");
+          old_file_time = file_time.c_str();
+            }
+        } // if
+
+      if (gain_button_released) {
+        gain_button_pressed = false;
+        gain_button_released = false;
+        drawScreen_Recording(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+        }
+
+
     /* Stop Recording */
       if (recording_in_progress && !recording_button) {
           Serial.println("BUTTON PRESSED");

@@ -79,9 +79,38 @@ void drawScreen_Recording(int airtemp, int humid, int pressure, const char* file
   display.println(filename);
 
   display.println("--------------------");
+
+  display.display();
+}
+
+/* Recording Screen Sucessful*/
+void drawScreen_Recording_Time(int airtemp, int humid, int pressure, const char* filename, const char* time) {
+  display.clearDisplay();
+  display.setTextSize(1);             
+  display.setTextColor(SSD1306_WHITE);        
+  display.setCursor(0,0);    
+
+  display.print("Audio Recorder ");
+  display.println(VERSION);
+
+  display.print("T:");
+  display.print(airtemp);
+  display.print(" | ");
+  display.print("H:");
+  display.print(humid);
+  display.print(" | ");
+  display.print("P:");
+  display.println(pressure);
+
+  display.print("Recording - ");
+  display.println(filename);
+
+  display.println("--------------------");
   
-  // display.print("Time: ");
-  // display.println(time);
+  display.print("Time: ");
+  display.println(time);
+
+  display.println();
 
   display.display();
 }
