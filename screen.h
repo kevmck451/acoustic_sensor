@@ -177,10 +177,10 @@ void drawScreen_TempError() {
 
   display.println("--------------------");
 
-  display.println("Type: No Response");
+  display.println("Press Rec Button");
 
   
-  display.println();
+  display.println("to continue without");
 
   display.println("Restart Recorder");
   
@@ -213,15 +213,15 @@ void drawScreen_GainDefault(int gain) {
   display.setTextColor(SSD1306_WHITE);        
   display.setCursor(0,0);    
 
-  display.println("Gain Set!");
+  display.println(" Gain Set!");
 
   display.setTextSize(1);
   display.println();
 
-  display.println("   Default Gain");
+  display.println("    Default Gain");
 
   display.println("   is now set to:");
-  display.print("    ");
+  display.print("         ");
   display.print(gain);
   display.println("dB");
   

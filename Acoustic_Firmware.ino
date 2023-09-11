@@ -102,6 +102,8 @@ void setup() {
           String text = "Insert SD Card";
           error_type = "No SD Card";
           error_thrown = true;
+          display.clearDisplay(); // Clear the buffer
+          delay(1000); // Pause for 2 seconds
           drawScreen_Error(temp, humid, pressure, text.c_str(), error_type.c_str(), file_time.c_str());
           insertSDLEDS();
           }
@@ -120,16 +122,17 @@ void setup() {
   
     /* Temp Sensor */
       if (!bme.begin(0x76)) {
+          display.clearDisplay(); // Clear the buffer
+          delay(1000); // Pause for 2 seconds
+          drawScreen_TempError();
           if (first_time) {
             Serial.println("Temp Sensor Not Found"); 
             Serial.println("Restart Device");
             first_time = false;
             }
           error_thrown = true;
-          delay(500);
-          drawScreen_TempError();
+          
           while (digitalRead(ButtonPin)) {
-            // drawScreen_TempError();
             insertSDLEDS();
             }
         } // if
@@ -152,7 +155,9 @@ void setup() {
       uint32_t mic_gain = readGain();
       unsigned long gain_millis;
       
+      
       while (digitalRead(ButtonPin)) {
+          bool default_set = false;
           int gain = mic_gain / 10;
           temp = temp_sensor(bme);
           humid = humid_sensor(bme);
@@ -169,13 +174,16 @@ void setup() {
                 setGainDefault(gain);
                 drawScreen_GainDefault(gain);
                 Serial.println("New Default Set!");
-                delay(2000);
+                default_set = true;
+                delay(3000);
                 break;
                 } // if
               } // while
 
-            if (mic_gain > 210) { mic_gain = 0;}
-            else {mic_gain += 20;} 
+            if (!default_set) {
+              if (mic_gain > 210) { mic_gain = 0;}
+              else {mic_gain += 20;} 
+            } // if 
           } // if button
         } // while stand by
 
@@ -373,7 +381,7 @@ static void audio_attention_cb(const ErrorAttentionParam *atprm) {
 }
 
 void insertSDLEDS() {
-
+  drawScreen_TempError();
   for (int i = 0; i < 5; i++) {
     lightsON();
     delay(100);
@@ -460,6 +468,7 @@ uint32_t readGain() {
       Serial.println("Error opening gain.txt");
   }
 
+  // Serial.println(gainValue);
   return gainValue;
 
 }
@@ -471,7 +480,7 @@ void setGainDefault(int gain) {
 
   File logFile = theSD.open("BIN/gain.txt", FILE_WRITE);
 
-  logFile.println(gain);
+  logFile.println(gain * 10);
   logFile.close();
   
 }
