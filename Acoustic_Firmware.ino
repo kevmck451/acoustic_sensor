@@ -21,7 +21,7 @@
     static const int GainPin = 7;
     static const int resetPin = 13;
     unsigned long sample_millis = millis();
-    float samptime = 0.9158; 
+    float samptime = 1.0;  //0.9158
 
 /* Screen */
     int error_thrown = false;
