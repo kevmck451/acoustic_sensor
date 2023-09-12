@@ -203,7 +203,6 @@ void setup() {
                            recoding_channel_number);
 
     /* File */
-
       fileNumber = 1;
       String record_filename = String(fileNumber) + ".wav";
       RECORD_FILE_NAME = record_filename;
@@ -287,11 +286,7 @@ void loop() {
           sample_millis = millis();
           } // if
 
-    /* Data Log Sampling */
-      // if ((current_millis - sample_millis) > st/2) {
-      //     logData(temp_sensor(bme), humid_sensor(bme), press_sensor(bme));
-      //   }      
-         // if
+
 
     /* Update Record Time */
       if (gain_button == 0) {gain_button_pressed = true;}
