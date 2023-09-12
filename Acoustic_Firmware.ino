@@ -283,7 +283,7 @@ void loop() {
           std::string time_str = ss.str();
           file_time = ss.str().c_str();
           // drawScreen_Recording_Time(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
-        
+          // logData(temp_sensor(bme), humid_sensor(bme), press_sensor(bme));
           sample_millis = millis();
           } // if
 
@@ -299,7 +299,6 @@ void loop() {
       if (gain_button_pressed) {
         if (old_file_time != file_time.c_str()) {
           drawScreen_Recording_Time(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
-          // logData(temp_sensor(bme), humid_sensor(bme), press_sensor(bme));
           Serial.println("Time Updated");
           old_file_time = file_time.c_str();
             }
