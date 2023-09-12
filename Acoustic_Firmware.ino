@@ -15,7 +15,7 @@
 
 
 /* Global Variables */
-    String PROGRAM_NAME = "Acoustic Main V4.0 - 9/11/23-Kevin McKenzie";
+    String PROGRAM_NAME = "Acoustic Main V4.0 - 9/12/23-Kevin McKenzie";
     bool first_time = true;
     static const int ButtonPin = 8;
     static const int GainPin = 7;
@@ -314,7 +314,7 @@ void loop() {
 
     /* Stop Recording */
       if (recording_in_progress && !recording_button) {
-          Serial.println("BUTTON PRESSED");
+          Serial.println("Recording Button Pressed");
           theAudio->stopRecorder();
           sleep(1);
           err = theAudio->readFrames(myFile);
@@ -542,7 +542,7 @@ void average_weather_data() {
     int avgHumidity = (totalHumidity + rowCount / 2) / rowCount;       // Rounding
     int avgPressure = (totalPressure + rowCount / 2) / rowCount;       // Rounding
 
-    // Overwrite the original CSV file with averaged data
+    theSD.remove(record_filename);
     logFile = theSD.open(record_filename, FILE_WRITE);
 
     if (logFile) {
