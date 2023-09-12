@@ -2,7 +2,7 @@ Acoustic Recorder Versions
 
 
 Version 4: 9/11/23
-	- Include gain setting on screen
+	- Include gain setting on stand by screen
 	- Retrieve gain setting from text file saved on SD card
 	- Cycle through gain settings in increments of 2dB
 	- Save current gain setting as default (overwrite setting in file)
