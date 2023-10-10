@@ -57,7 +57,7 @@ void drawScreen_Standby(int airtemp, int humid, int pressure, int gain) {
 }
 
 /* Recording Screen */
-void drawScreen_Recording(int airtemp, int humid, int pressure, const char* filename, const char* time) {
+void drawScreen_Recording(int airtemp, int humid, int pressure, const char* filename, const char* time, int gain) {
   display.clearDisplay();
   display.setTextSize(1);             
   display.setTextColor(SSD1306_WHITE);        
@@ -75,16 +75,58 @@ void drawScreen_Recording(int airtemp, int humid, int pressure, const char* file
   display.print("P:");
   display.println(pressure);
 
-  display.print("Recording - ");
-  display.println(filename);
+  display.print("Recording  ");
+  display.print("   G:");
+  display.print(gain);
+  display.println("dB");
 
   display.println("--------------------");
+
+  display.print("Filename ");
+  display.println(filename);
+
+  
+
+  display.display();
+}
+
+/* Recording Screen Rec Time Update*/
+void drawScreen_Recording_Time(int airtemp, int humid, int pressure, const char* filename, const char* time, int gain) {
+  display.clearDisplay();
+  display.setTextSize(1);             
+  display.setTextColor(SSD1306_WHITE);        
+  display.setCursor(0,0);    
+
+  display.print("Audio Recorder ");
+  display.println(VERSION);
+
+  display.print("T:");
+  display.print(airtemp);
+  display.print(" | ");
+  display.print("H:");
+  display.print(humid);
+  display.print(" | ");
+  display.print("P:");
+  display.println(pressure);
+
+  display.print("Recording  ");
+  display.print("   G:");
+  display.print(gain);
+  display.println("dB");
+
+  display.println("--------------------");
+
+  display.print("Filename ");
+  display.println(filename);
+  
+  display.print("Time: ");
+  display.println(time);
 
   display.display();
 }
 
 /* Recording Screen Sucessful*/
-void drawScreen_Recording_Time(int airtemp, int humid, int pressure, const char* filename, const char* time) {
+void drawScreen_Recording_Suc(int airtemp, int humid, int pressure, const char* filename, const char* time, int gain) {
   display.clearDisplay();
   display.setTextSize(1);             
   display.setTextColor(SSD1306_WHITE);        
@@ -102,47 +144,18 @@ void drawScreen_Recording_Time(int airtemp, int humid, int pressure, const char*
   display.print("P:");
   display.println(pressure);
 
-  display.print("Recording - ");
-  display.println(filename);
+  display.print("Rec Done   ");
+  display.print("   G:");
+  display.print(gain);
+  display.println("dB");
 
   display.println("--------------------");
+
+  display.print("Filename ");
+  display.println(filename);
   
   display.print("Time: ");
   display.println(time);
-
-  display.println();
-
-  display.display();
-}
-
-/* Recording Screen Sucessful*/
-void drawScreen_Recording_Suc(int airtemp, int humid, int pressure, const char* filename, const char* time) {
-  display.clearDisplay();
-  display.setTextSize(1);             
-  display.setTextColor(SSD1306_WHITE);        
-  display.setCursor(0,0);    
-
-  display.print("Audio Recorder ");
-  display.println(VERSION);
-
-  display.print("T:");
-  display.print(airtemp);
-  display.print(" | ");
-  display.print("H:");
-  display.print(humid);
-  display.print(" | ");
-  display.print("P:");
-  display.println(pressure);
-
-  display.print("Rec Done - ");
-  display.println(filename);
-
-  display.println("--------------------");
-  
-  display.print("Time: ");
-  display.println(time);
-
-  display.println();
 
   display.println("Push button to enter");
   display.println("Data Transfer Mode");

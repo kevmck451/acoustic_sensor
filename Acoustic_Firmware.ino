@@ -50,7 +50,7 @@
 
     static const uint32_t recoding_sampling_rate = 48000;  
     static const uint8_t recoding_channel_number = 4;
-    static const uint8_t recoding_bit_length = 24;  
+    static const uint8_t recoding_bit_length = 16;  
     static const uint32_t recoding_time = 3600;     // 1800 seconds is 30min
     static const int32_t recoding_byte_per_second = recoding_sampling_rate * recoding_channel_number * recoding_bit_length / 8;
     static const uint64_t recoding_size = recoding_byte_per_second * recoding_time;
@@ -61,6 +61,7 @@
     int recording_second_2 = 0;
     int recording_minute_1 = 0;
     int recording_minute_2 = 0;
+    int gain_value = 0;
 
 
 //----------------------------------------------------------------------------
@@ -162,6 +163,7 @@ void setup() {
       while (digitalRead(ButtonPin)) {
           bool default_set = false;
           int gain = mic_gain / 10;
+          gain_value = gain;
           temp = temp_sensor(bme);
           humid = humid_sensor(bme);
           pressure = press_sensor(bme);
@@ -239,7 +241,7 @@ void setup() {
       lightsON();
       theAudio->writeWavHeader(myFile);
       theAudio->startRecorder();
-      drawScreen_Recording(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+      drawScreen_Recording(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str(), gain_value);
       
 
 } // setup
@@ -293,7 +295,7 @@ void loop() {
       if (gain_button_pressed && gain_button == 1) {gain_button_released = true;}
       if (gain_button_pressed) {
         if (old_file_time != file_time.c_str()) {
-          drawScreen_Recording_Time(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+          drawScreen_Recording_Time(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str(), gain_value);
           Serial.println("Time Updated");
           old_file_time = file_time.c_str();
             }
@@ -302,7 +304,7 @@ void loop() {
       if (gain_button_released) {
         gain_button_pressed = false;
         gain_button_released = false;
-        drawScreen_Recording(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+        drawScreen_Recording(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str(), gain_value);
         }
 
 
@@ -312,7 +314,7 @@ void loop() {
           theAudio->stopRecorder();
           sleep(1);
           err = theAudio->readFrames(myFile);
-          drawScreen_Recording_Suc(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+          drawScreen_Recording_Suc(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str(), gain_value);
           goto exitRecording;
           }
 
@@ -320,7 +322,7 @@ void loop() {
           theAudio->stopRecorder();
           sleep(1);
           err = theAudio->readFrames(myFile);
-          drawScreen_Recording_Suc(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+          drawScreen_Recording_Suc(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str(), gain_value);
           goto exitRecording;
           }
 
@@ -363,7 +365,7 @@ void loop() {
 
           /* Wait for Reset */
           if (!error_thrown) {
-              drawScreen_Recording_Suc(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str());
+              drawScreen_Recording_Suc(temp, humid, pressure, RECORD_FILE_NAME.c_str(), file_time.c_str(), gain_value);
               Serial.println("Press Button to Enter DT Mode");
               while (digitalRead(ButtonPin)) {}
               delay(1000);
