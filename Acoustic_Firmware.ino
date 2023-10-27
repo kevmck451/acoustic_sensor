@@ -446,7 +446,7 @@ void logData(int temperature, int humidity, int pressure) {
 
     // Write the CSV header if the file is empty
     if (isNewFile) {
-      logFile.println("Temperature,Humidity,Pressure");
+      logFile.println("Temperature,Humidity,Pressure,Gain");
     }
 
     // Write the temperature, humidity, and pressure values to the CSV file
@@ -455,7 +455,6 @@ void logData(int temperature, int humidity, int pressure) {
     logFile.print(humidity);
     logFile.print(",");
     logFile.println(pressure); 
-
     logFile.close();
 
   } else {
@@ -537,17 +536,21 @@ void average_weather_data() {
     int avgTemperature = (totalTemperature + rowCount / 2) / rowCount; // Rounding
     int avgHumidity = (totalHumidity + rowCount / 2) / rowCount;       // Rounding
     int avgPressure = (totalPressure + rowCount / 2) / rowCount;       // Rounding
+    uint32_t mic_gain = readGain();
+    int gain = mic_gain/10;
 
     theSD.remove(record_filename);
     logFile = theSD.open(record_filename, FILE_WRITE);
 
     if (logFile) {
-      logFile.println("Temperature,Humidity,Pressure");
+      logFile.println("Temperature,Humidity,Pressure,Gain");
       logFile.print(avgTemperature);
       logFile.print(",");
       logFile.print(avgHumidity);
       logFile.print(",");
-      logFile.println(avgPressure);
+      logFile.print(avgPressure);
+      logFile.print(",");
+      logFile.println(gain_value); 
       logFile.close();
     } else {
       Serial.println("Error: Could not open log file for writing");
