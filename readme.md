@@ -28,7 +28,7 @@ The audio recording device used in the experiment was the Sony Spresense microco
 
 ### Acoustic Sensor
 ![Acoustic Sensor](media/sensor_1.png)
-![Acoustic Sensor](media/sensor_3)
+![Acoustic Sensor](media/sensor_3.jpeg)
 
 ### KiCad Model
 ![Acoustic Sensor](media/PCB_Image.jpeg)
