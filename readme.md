@@ -15,7 +15,7 @@ The audio recording device used in the experiment was the Sony Spresense microco
 	- screen.h
 	- temp.h
 
-## Bin Directory
+## BIN
 	- this needs to be on the sony spresense formated SD card
 	- includes the audio codecs used for recording
 	- gain.txt file to store the default gain setting
