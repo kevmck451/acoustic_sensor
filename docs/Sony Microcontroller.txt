@@ -1,0 +1,80 @@
+Sony Microcontroller
+
+What should the board do?
+- Read data from mic at sample rate
+- Store data from mic on SD card
+
+
+
+Setting Up Enviornment:
+https://developer.sony.com/develop/spresense/docs/arduino_set_up_en.html
+
+Arduino 2 IDE
+
+
+Pins / Names:
+https://developer.sony.com/develop/spresense/docs/introduction_en.html
+
+
+SD Card Format:
+- MS_DOS or FAT
+
+
+
+Connecting Mics:
+https://developer.sony.com/develop/spresense/tutorials-sample-projects/spresense-tutorials/using-multiple-microphone-inputs-with-spresense#tutorial-step-1
+
+
+Electret Mics:
+- Need bias resistor of 2.2k
+
+
+Mic Details:
+https://developer.sony.com/develop/spresense/docs/hw_docs_en.html#_how_to_use_microphones
+
+
+Audio Directory Reference:
+https://developer.sony.com/develop/spresense/developer-tools/api-reference/api-references-arduino/dir_654f178923b1444d84ee2a4d88be6b27.html
+
+
+Downloads needed to Record:
+https://developer.sony.com/develop/spresense/docs/arduino_tutorials_en.html#_install_dsp_files
+
+Mic Pins:
+https://developer.sony.com/develop/spresense/docs/hw_docs_lte_en.html
+
+
+Developer Docs:
+https://developer.sony.com/develop/spresense/docs/sdk_developer_guide_en.html#_audio_subsystem
+
+
+High Level API:
+https://developer.sony.com/develop/spresense/developer-tools/api-reference/api-references-spresense-sdk/group__audioutils__audio__high__level__api.html#ga8a3c2ed2df8ad61fdc3da8140daa9181
+
+
+Schematics:
+https://developer.sony.com/develop/spresense/docs/hw_design_en.html
+
+
+Analog Voltage Input Range: 5V range
+Digital Voltage Input Range: 3.3 or 5V
+JP10: UART2 Jumper
+
+
+
+Ways to Program: 
+- High Level
+- Object Level
+
+
+
+
+
+How the Board will be powered
+
+
+
+GPS Readings connected with Audio
+Altimeter settings connected with Audio
+
+
