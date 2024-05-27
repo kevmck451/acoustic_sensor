@@ -9,32 +9,47 @@ The audio recording device used in the experiment was the Sony Spresense microco
 
 ## Read Manual.md for specific instructions on data collection
 
-
-## Sony Spresense Shield KiCad File
-	- KiCad files for shield
-	- Mic Resisters: 2.2k Ohms
-	- Capacitors: 1uF
-	- Potentiometers: 500k Ohms
-
-## 3D Printer Enclosure files
-	- MicModuleBoxrev3.data
-	- MicModuleBoxrev3.gcode
+## Acoustic_Firmware
+	- firmware and header files for arduino IDE upload
+	- Acoustic_Firmware.ino
+	- screen.h
+	- temp.h
 
 ## Bin Directory
 	- this needs to be on the sony spresense formated SD card
 	- includes the audio codecs used for recording
 	- gain.txt file to store the default gain setting
 
+## Docs
+	- Recorder Schematic
+	- Parts List
+	- Recorder Versions
+	- Sony Microcontroller Notes
 
-### Acoustic Sensor
+## Enclosure
+	- 3D Printer Enclosure files
+	- MicModuleBoxrev3.data
+	- MicModuleBoxrev3.gcode
+
+## Shield
+	- Sony Spresense Shield KiCad File
+	- Mic Resisters: 2.2k Ohms
+	- Capacitors: 1uF
+	- Potentiometers: 500k Ohms
+
+
+
+
+
+# Acoustic Sensor
 ![Acoustic Sensor](media/sensor_1.png)
 ![Acoustic Sensor](media/sensor_3.jpeg)
 
-### KiCad Model
+# KiCad Model
 ![Acoustic Sensor](media/PCB_Image.jpeg)
 ![Acoustic Sensor](media/sensor_2.jpeg)
 
-### In Action
+# In Action
 ![Acoustic Sensor](media/hex.jpeg)
 ![Acoustic Sensor](media/angel_bullet2.jpeg)
 ![Acoustic Sensor](media/angel_bullet1.jpeg)
